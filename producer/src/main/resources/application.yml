@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: riskstream-producer
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      compression-type: lz4
+      properties:
+        enable.idempotence: true
+        linger.ms: 5
+        spring.json.add.type.headers: false
+
+riskstream:
+  producer:
+    tps: ${PRODUCER_TPS:20}       # steady-state transactions per second
+    card-pool: 5000                # number of distinct synthetic cards
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
